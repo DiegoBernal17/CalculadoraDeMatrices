@@ -102,6 +102,7 @@ public class Fracciones
         denominador = f1.GetDenominador() * f2.GetDenominador();
         return new Fracciones(numerador, denominador);
     }
+    
     public static Fracciones division(Fracciones f1, Fracciones f2)
     {
         int numerador, denominador;
@@ -177,6 +178,19 @@ public class Fracciones
         result[1] = denominador/a;
         return result;
     }
+    
+    public static Fracciones[][] convertir(int tamCols, int tamRows, int[][] mtz)
+    {
+        Fracciones[][] nuevaMatriz = new Fracciones[tamCols][tamRows];
+        for(int rows=0; rows<mtz.length; rows++)
+        {
+            for(int cols=0; cols<mtz[rows].length; cols++)
+            {
+                nuevaMatriz[rows][cols] = new Fracciones(mtz[rows][cols]);
+            }
+        }
+        return nuevaMatriz;
+    }
  
     public void printf()
     {
@@ -189,5 +203,10 @@ public class Fracciones
     public int GetDenominador()
     {
         return denominador;
+    }
+    
+    public String toString() 
+    {
+        return this.numerador+((this.denominador==1)?" ":"/"+this.denominador);
     }
 }
