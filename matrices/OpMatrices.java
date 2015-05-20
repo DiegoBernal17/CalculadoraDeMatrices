@@ -1,4 +1,4 @@
-package matrices;
+package matries;
 
 /**
  *
@@ -6,10 +6,11 @@ package matrices;
  */
 import java.util.Arrays;
 import javax.swing.JOptionPane;
+import fraccion.Fracciones;
 
-public class OpMatrices 
+public class OpMatrices
 {
-    private int[][] opMatriz;
+    private Fracciones[][] opMatriz;
     private Matrices matriz_1;
     private Matrices matriz_2;
     private int tamRows;
@@ -24,7 +25,7 @@ public class OpMatrices
         this.tamRows = ma_1.getTamRows();
         this.tamCols = ma_2.getTamCols();
         this.op = operacion;
-        this.opMatriz = new int[this.tamRows][this.tamCols];
+        this.opMatriz = new Fracciones[this.tamRows][this.tamCols];
         this.message = "";
     }
     
@@ -60,15 +61,13 @@ public class OpMatrices
     
     public void sumarMatrices()
     {
-        int val;
         this.setMessage("Operación de sumar.\n");
         for(int i=0;i<this.tamRows;i++)
         {
             for(int j=0;j<this.tamCols;j++)
             {
-                val = matriz_1.getMatriz(i,j);
-                opMatriz[i][j] = matriz_1.getMatriz(i,j) + matriz_2.getMatriz(i,j);
-                this.setMessage(val+" + "+matriz_2.getMatriz(i,j)+" = "+opMatriz[i][j]);
+                opMatriz[i][j] = Fracciones.suma(matriz_1.getMatriz(i,j), matriz_2.getMatriz(i,j));
+                this.setMessage(matriz_1.getMatriz(i,j).toString()+" + "+matriz_2.getMatriz(i,j).toString()+" = "+opMatriz[i][j].toString());
             }
         }
         this.setMessage("\n---Fin suma---\n");
@@ -81,8 +80,8 @@ public class OpMatrices
         {
             for(int j=0;j<this.tamCols;j++)
             {
-                opMatriz[i][j] = matriz_1.getMatriz(i,j) - matriz_2.getMatriz(i,j);
-                this.setMessage(matriz_1.getMatriz(i,j)+" - "+matriz_2.getMatriz(i,j)+" = "+opMatriz[i][j]);
+                opMatriz[i][j] = Fracciones.resta(matriz_1.getMatriz(i,j), matriz_2.getMatriz(i,j));
+                this.setMessage(matriz_1.getMatriz(i,j).toString()+" - "+matriz_2.getMatriz(i,j).toString()+" = "+opMatriz[i][j].toString());
             }
         }
         this.setMessage("\n---Fin resta---\n");
@@ -101,17 +100,17 @@ public class OpMatrices
         this.setMessage("\n---Fin multiplicar---\n");
     }
     
-    public int multiplicar(int a, int b)
+    public Fracciones multiplicar(int a, int b)
     {
         String aux1 = "";
         String aux2 = "";
-        int result = 0;
+        Fracciones result = new Fracciones(0);
         for(int i=0;i<matriz_1.getTamCols();i++)
         {
-            int multip = this.matriz_1.getMatriz(a, i)*this.matriz_2.getMatriz(i, b);
-            result += multip;
+            Fracciones multip = Fracciones.multiplicacion(this.matriz_1.getMatriz(a, i), this.matriz_2.getMatriz(i, b));
+            result = Fracciones.suma(result, multip);
             // this.verOperaciones(a, b, i, multip);
-            aux1 += "("+this.matriz_1.getMatriz(a, i)+" x "+this.matriz_2.getMatriz(i, b)+")";
+            aux1 += "("+this.matriz_1.getMatriz(a, i).toString()+" x "+this.matriz_2.getMatriz(i, b).toString()+")";
             aux2 += multip;
             if(i < (matriz_1.getTamCols()-1))
             {
@@ -127,9 +126,9 @@ public class OpMatrices
     public String mostrarMatrices()
     {
         String out = "";
-        for (int[] viewMat : opMatriz) {
+        for (Fracciones[] viewMat : opMatriz) {
             for (int j = 0; j < viewMat.length; j++) {
-                out += viewMat[j] + " ";
+                out += viewMat[j].toString() + " ";
             }
             out += "\n";
         }
@@ -141,9 +140,9 @@ public class OpMatrices
         String a = matriz_1.mostrarMatriz("A");
         String b = matriz_2.mostrarMatriz("B");
         String out = a+b+"A"+op+"B = ";
-        for (int[] viewMat : opMatriz) {
+        for (Fracciones[] viewMat : opMatriz) {
             for (int j = 0; j < viewMat.length; j++) {
-                out += viewMat[j] + "   ";
+                out += viewMat[j].toString() + "   ";
             }
             out += "\n           ";
         }
@@ -182,7 +181,7 @@ public class OpMatrices
         return tamCols;
     }
     
-    public int[][] getMatriz()
+    public Fracciones[][] getMatriz()
     {
         return opMatriz;
     }
