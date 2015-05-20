@@ -14,6 +14,7 @@ public class Operaciones {
     private Fracciones[][] matriz;
     private Fracciones[][] matriz_2;
 
+    // Constructor sin parametros.
     public Operaciones()
     {
         this.tamCols = 0;
@@ -21,6 +22,7 @@ public class Operaciones {
         this.matriz = null;
     }
     
+    // Constructor recibiendo 3 parametros
     public Operaciones(int tamCols, int tamRows, int[][] matriz)
     {
         this.tamCols = tamCols;
@@ -30,6 +32,7 @@ public class Operaciones {
         this.matriz = this.convertirFraccion(matriz);
     }
     
+    // Constructor recibiendo 6 parametros. Recibe una segunda matriz necesaria para algunos metodos
     public Operaciones(int tamCols, int tamRows, int[][] matriz, int tamRows_2, int tamCols_2, int[][] matriz_2)
     {
         this.tamCols = tamCols;
@@ -41,6 +44,7 @@ public class Operaciones {
 
     }
     
+    // Este metodo convierte un arreglo de enteros a un arreglo de Fracciones
     public Fracciones[][] convertirFraccion(int[][] matriz)
     {
         Fracciones[][] nuevaMatriz = new Fracciones[tamCols][tamRows];
@@ -54,7 +58,7 @@ public class Operaciones {
         return nuevaMatriz;
     }
     
-    // Este metodo invierte filas y columnas
+    // Este metodo invierte filas y columnas. Matriz Trasversal
     public Fracciones[][] sacarTrasversal()
     {
         if(tamCols == tamRows)
@@ -72,6 +76,7 @@ public class Operaciones {
         return null;
     }
     
+    // Este metodo calcula el determinante de la matriz recibida.
     public Fracciones calcularDeterminante(Fracciones[][] matriz)
     {
         // Comprueba si el número de columnas y filas son iguales
@@ -152,7 +157,8 @@ public class Operaciones {
         }
     }
     
-    public Fracciones[][] metodoGaussJordan()
+    // Metodo de Gauss Jordan. El resultao final es la matriz ya procesada por el metodo de Gauss Jordan
+    public Fracciones[][] usarGaussJordan()
     {
         // Creamos el arreglo de Fracciones de la nueva matriz de GJ
         Fracciones[][] matrizGauss = new Fracciones[tamRows][tamCols+matriz_2[0].length];
@@ -231,13 +237,150 @@ public class Operaciones {
         return matrizGauss;
     }
     
+    /* Codigo estructurado del metodo de Gauss Jordan.
+    public Fracciones[][] metodoGaussJordan()
+    {
+        Fracciones[][] matrizGauss = new Fracciones[tamRows][tamCols+matriz_2[0].length];
+        
+        //Convertimos el arreglo  matrizGauss[0][0] a 1 (uno) y multiplicamos todos sus elemntos
+        matrizGauss[0][0] = new Fracciones(matriz[0][0].GetDenominador(), matriz[0][0].GetNumerador());
+        matrizGauss[0][1] = Fracciones.multiplicacion(matriz[0][1], matrizGauss[0][0]);
+        matrizGauss[0][2] = Fracciones.multiplicacion(matriz[0][2], matrizGauss[0][0]);
+        
+        for (int i=0; i<matriz_2[0].length; i++) {
+            matrizGauss[0][3+i] = Fracciones.multiplicacion(matriz_2[0][i], matrizGauss[0][0]);
+        }
+        
+        // Numeros fraccionales (objeto Fracciones) auxiliares. frAux1;
+        Fracciones frAux1;
+        frAux1 = new Fracciones(-(matriz[1][0].GetNumerador()), matriz[1][0].GetDenominador());
+        
+        // Sacamos el 0 necesario para matrizGauss[1][0] y hacemos las multiplicaciones
+        matrizGauss[1][0] = Fracciones.multiplicacion(frAux1, matriz[0][0]);
+        matrizGauss[1][0] = Fracciones.suma(matriz[1][0], matrizGauss[1][0]);
+        
+        matrizGauss[1][1] = Fracciones.multiplicacion(frAux1, matriz[0][1]);
+        matrizGauss[1][1] = Fracciones.suma(matriz[1][1], matrizGauss[1][1]);
+        
+        matrizGauss[1][2] = Fracciones.multiplicacion(frAux1, matriz[0][2]);
+        matrizGauss[1][2] = Fracciones.suma(matriz[1][2], matrizGauss[1][2]);
+        
+        for (int i=0; i<matriz_2[1].length; i++) {
+            matrizGauss[1][3+i] = Fracciones.multiplicacion(frAux1, matriz_2[0][i]);
+            matrizGauss[1][3+i] = Fracciones.suma(matriz[1][i], matrizGauss[1][3+i]);
+        }
+        
+        // Numeros fraccionales (objeto Fracciones) auxiliares. frAux2;
+        Fracciones frAux2;
+        frAux2 = new Fracciones(-(matriz[2][0].GetDenominador()), matriz[2][0].GetNumerador());
+        
+        // Sacamos el 0 necesario para matrizGauss[2][0] y hacemos las multiplicaciones
+        matrizGauss[2][0] = Fracciones.multiplicacion(frAux2, matriz[0][0]);
+        matrizGauss[2][0] = Fracciones.suma(matriz[2][0], matrizGauss[2][0]);
+        
+        matrizGauss[2][1] = Fracciones.multiplicacion(frAux2, matriz[0][2]);
+        matrizGauss[2][1] = Fracciones.suma(matriz[2][1], matrizGauss[2][1]);
+        
+        matrizGauss[2][2] = Fracciones.multiplicacion(frAux2, matriz[0][3]);
+        matrizGauss[2][2] = Fracciones.suma(matriz[2][2], matrizGauss[2][2]);
+        
+        for (int i=0; i<matriz_2[2].length; i++) {
+            matrizGauss[2][3+i] = Fracciones.multiplicacion(frAux2, matriz_2[0][i]);
+            matrizGauss[2][3+i] = Fracciones.suma(matriz[2][i], matrizGauss[2][3+i]);
+        }
+        
+        Fracciones frAux3;
+        frAux3 = new Fracciones(matriz[1][1].GetDenominador(), matriz[1][1].GetDenominador());
+    
+        matrizGauss[1][1] = Fracciones.multiplicacion(frAux3, matriz[1][1]);
+        matrizGauss[1][2] = Fracciones.multiplicacion(frAux3, matriz[1][2]);
+        
+        for (int i=0; i<matriz_2[1].length; i++) {
+            matrizGauss[1][3+i] = Fracciones.multiplicacion(frAux3, matriz_2[0][i]);
+        }
+        
+        // Numeros fraccionales (objeto Fracciones) auxiliares. frAux4;
+        Fracciones frAux4;
+        frAux4 = new Fracciones(-(matriz[0][1].GetNumerador()), matriz[0][1].GetDenominador());
+        
+        // Sacamos el 0 necesario para matrizGauss[0][1] y hacemos las multiplicaciones
+        matrizGauss[0][1] = Fracciones.multiplicacion(frAux3, matriz[1][1]);
+        matrizGauss[0][1] = Fracciones.suma(matriz[0][1], matrizGauss[0][1]);
+        
+        matrizGauss[0][2] = Fracciones.multiplicacion(frAux1, matriz[1][2]);
+        matrizGauss[0][2] = Fracciones.suma(matriz[2][1], matrizGauss[0][2]);
+        
+        for (int i=0; i<matriz_2[0].length; i++) {
+            matrizGauss[0][3+i] = Fracciones.multiplicacion(frAux4, matriz_2[1][i]);
+            matrizGauss[0][3+i] = Fracciones.suma(matriz_2[0][i], matrizGauss[0][3+i]);
+        }
+        
+        // Numeros fraccionales (objeto Fracciones) auxiliares. frAux5;
+        Fracciones frAux5;
+        frAux5 = new Fracciones(-(matriz[2][1].GetNumerador()), matriz[2][1].GetDenominador());
+        
+        // Sacamos el 0 necesario para matrizGauss[2][1] y hacemos las multiplicaciones
+        matrizGauss[2][1] = Fracciones.multiplicacion(frAux5, matriz[0][0]);
+        matrizGauss[2][1] = Fracciones.suma(matriz[2][0], matrizGauss[1][0]);
+        
+        matrizGauss[0][2] = Fracciones.multiplicacion(frAux5, matriz[0][1]);
+        matrizGauss[0][2] = Fracciones.suma(matriz[1][0], matrizGauss[1][1]);
+        
+        for (int i=0; i<matriz_2[0].length; i++) {
+            matrizGauss[0][3+i] = Fracciones.multiplicacion(frAux4, matriz_2[1][i]);
+            matrizGauss[0][3+i] = Fracciones.suma(matriz[2][i], matrizGauss[0][3+i]);
+        }
+        
+        //
+        Fracciones frAux6;
+        frAux6 = new Fracciones(matriz[2][2].GetDenominador(), matriz[2][2].GetDenominador());
+    
+        matrizGauss[2][2] = Fracciones.multiplicacion(frAux3, matriz[1][2]);
+        
+        for (int i=0; i<matriz_2[2].length; i++) {
+            matrizGauss[2][3+i] = Fracciones.multiplicacion(frAux6, matriz_2[2][i]);
+        }
+        
+        // Numeros fraccionales (objeto Fracciones) auxiliares. frAux7;
+        Fracciones frAux7;
+        frAux7 = new Fracciones(-(matriz[0][2].GetNumerador()), matriz[0][2].GetDenominador());
+        
+        // Sacamos el 0 necesario para matrizGauss[0][2] y hacemos las multiplicaciones
+        matrizGauss[0][2] = Fracciones.multiplicacion(frAux7, matriz[2][2]);
+        matrizGauss[0][2] = Fracciones.suma(matriz[0][2], matrizGauss[0][2]);
+        
+        for (int i=0; i<matriz_2[0].length; i++) {
+            matrizGauss[0][3+i] = Fracciones.multiplicacion(frAux7, matriz_2[2][i]);
+            matrizGauss[0][3+i] = Fracciones.suma(matriz_2[0][i], matrizGauss[0][3+i]);
+        }
+        
+        // Numeros fraccionales (objeto Fracciones) auxiliares. frAux5;
+        Fracciones frAux8;
+        frAux8 = new Fracciones(-(matriz[1][1].GetNumerador()), matriz[1][1].GetDenominador());
+        
+        // Sacamos el 0 necesario para matrizGauss[2][1] y hacemos las multiplicaciones
+        matrizGauss[1][2] = Fracciones.multiplicacion(frAux8, matriz[2][2]);
+        matrizGauss[1][2] = Fracciones.suma(matriz[2][1], matrizGauss[1][2]);
+        
+        for (int i=0; i<matriz_2[1].length; i++) {
+            matrizGauss[1][3+i] = Fracciones.multiplicacion(frAux7, matriz_2[2][i]);
+            matrizGauss[1][3+i] = Fracciones.suma(matriz[1][i], matrizGauss[1][3+i]);
+        }
+        
+        return matrizGauss;
+    } */
+    
+    // Metodo para sustituir toda una columna
     public Fracciones[][] sustituirColumna(int column)
     {
+        // Se crea e inicializa un arreglo auxiliar
         Fracciones[][] nuevaMatriz = new Fracciones[tamCols][tamRows];
+        
         for(int cols=0; cols<tamCols; cols++)
         {
             for(int rows=0; rows<tamRows; rows++)
             {
+                // Si la columna que se pide sustituir es igual a la actual en el ciclo.
                 if(cols == column)
                     nuevaMatriz[cols][rows] = matriz_2[cols][rows];
                 else
@@ -245,6 +388,13 @@ public class Operaciones {
             }
         }
         return nuevaMatriz;
+    }
+    
+    // Metodo para mostrar X, Y y Z de una matriz mediante el metodo de Gauss Jordan.
+    public String metodoGaussJordan()
+    {
+        Fracciones[][] gj = this.usarGaussJordan();
+        return "X="+gj[0][this.tamRows]+"  Y="+gj[1][this.tamRows]+"  Z="+gj[2][this.tamRows];
     }
     
     public String metodoDeterminantes()
@@ -274,44 +424,75 @@ public class Operaciones {
         // Sacamos Z dividiendo Dz entre Dt
         z = Fracciones.division(dz, dt);
         
+        // Retorna el valor de X, Y, Z.
         return "X="+x+"  Y="+y+"  Z="+z;
     }
     
+    // Metodo para sacar la inversa por el metodo de Gauss Jordan
     public Fracciones[][] inversaGaussJordan()
     {
+        // Calcula la determinante de la matriz para comprobar si no es 0
         Fracciones dt = this.calcularDeterminante(this.matriz);
         if(dt.GetNumerador() != 0)
         {
+            // Las filas y columnas deben ser del mismo tamaño
             if(tamCols == tamRows)
             {
+                // Saca la matriz identida y la guarda en la 'matriz_2'
                 this.setMatriz_2(this.matrizIdentidad());
-                return this.metodoGaussJordan();
+                // Retorna la matriz bidimensinal ya procesada por el metodo de Gauss Jordan
+                // y que seria ya la matriz inversa
+                return this.usarGaussJordan();
             } 
             else
                 JOptionPane.showMessageDialog(null, "Error. Las filas y columnas de la matriz deben ser iguales.");
         }
         else
             JOptionPane.showMessageDialog(null, "Error. El determinante es 0 por lo tanto no se puede sacar la inversa");
+        // Si retorna este valor 'null' es que hubo un error y anteriorente debio mostrar un mensaje de error.
         return null;
     }
     
+    // Este metodo solo es llamado para mostrar la comprobacion de la inversa por GJ.    A * A^2 = |
     public void comprobacionInvGJ()
     {
-        
+        // Multiplicar matriz de fracciones
+        // Fracciones.multiplicacion(this.matriz, this.inversaGaussJordan());
     }
     
+    // Este metodo saca la inversa por el metodo de cofactores
     public void inversaCofactores()
     {
-        
+        char op;
+        Fracciones dtA = this.calcularDeterminante(matriz);
+        if(dtA.GetNumerador() != 0)
+        {
+            for(int rows=0; rows<tamRows; rows++)
+            {
+                for(int cols=0; cols<tamCols; cols++)
+                {
+                    if((rows+cols) % 2 == 0)
+                        op = '+';
+                    else
+                        op = '-';
+                   
+                }
+            }
+        }
     }
     
+    // Lo que hace este metodo es crear una matriz Fracciones auxiliar par asi convertir todo en 0 y 1
+    // segun como se estructura la matriz identidad. Siempre dara el mismo resultado segun el tamaño de la matriz
     public Fracciones[][] matrizIdentidad()
     {
+        // Matriz auxiliar 'ident'
         Fracciones[][] ident = new Fracciones[tamCols][tamRows];
-        for(int rows=0; rows<ident.length; rows++)
+        for(int cols=0; cols<ident.length; cols++)
         {
-            for(int cols=0; cols<ident[rows].length; cols++)
+            for(int rows=0; rows<ident[cols].length; rows++)
             {
+                // Rows y Cols tiene que tener el mismo valor (Ejemplo rows=1 y cols=1)
+                // El valor de la matriz ident es igual a '1' de lo contrario lo demas seran solo '0'
                 if(rows == cols)
                     ident[rows][cols] = new Fracciones(1);
                 else
@@ -321,8 +502,23 @@ public class Operaciones {
         return ident;
     }
     
+    public void setMatriz(Fracciones[][] matriz)
+    {
+        this.matriz = matriz;
+    }
+    
     public void setMatriz_2(Fracciones[][] matriz)
     {
         this.matriz_2 = matriz;
+    }
+    
+    public Fracciones[][] getMatriz()
+    {
+        return this.matriz;
+    }
+    
+    public Fracciones[][] getMatriz_2()
+    {
+        return this.matriz_2;
     }
 }
