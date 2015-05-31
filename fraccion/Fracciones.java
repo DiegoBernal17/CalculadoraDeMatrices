@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package fraccion;
 
 /**
@@ -51,6 +46,11 @@ public class Fracciones
         this.denominador = d;
     }
    
+    public Fracciones(Fracciones fr)
+    {
+        this.numerador = fr.numerador;
+        this.denominador = fr.denominador;
+    }
  
     public static Fracciones suma(Fracciones f1, Fracciones f2)
     {
@@ -58,7 +58,10 @@ public class Fracciones
         
         numerador =(f1.GetNumerador() * f2.GetDenominador()) + (f2.GetNumerador() * f1.GetDenominador());
         denominador = f1.GetDenominador()*f2.GetDenominador();
-        return new Fracciones(numerador, denominador);
+        
+        Fracciones nuevaFr =  new Fracciones(numerador, denominador);
+        nuevaFr.simpli();
+        return nuevaFr;
     }
     
     public static Fracciones suma(Fracciones[] f1)
@@ -70,6 +73,7 @@ public class Fracciones
         {
             fraccion = Fracciones.suma(fraccion, f1[i]);
         }
+        fraccion.simpli();
         return fraccion;
     }
     
@@ -79,19 +83,23 @@ public class Fracciones
         
         numerador = (f1.GetNumerador() * f2.GetDenominador()) - (f2.GetNumerador() * f1.GetDenominador());
         denominador = f1.GetDenominador() * f2.GetDenominador();
-        return new Fracciones(numerador, denominador);
+        
+        Fracciones nuevaFr = new Fracciones(numerador, denominador);
+        nuevaFr.simpli();
+        return nuevaFr;
     }
     
     public static Fracciones resta(Fracciones[] f1)
     {
-        Fracciones fraccion;
-        fraccion = Fracciones.resta(f1[0], f1[1]);
+        Fracciones resta;
+        resta = f1[0];
         
-        for(int i=2; i<f1.length; i++)
+        for(int i=1; i<f1.length; i++)
         {
-            fraccion = Fracciones.resta(fraccion, f1[i]);
+            resta = Fracciones.resta(resta, f1[i]);
         }
-        return fraccion;
+        resta.simpli();
+        return resta;
     }
     
     public static Fracciones  multiplicacion(Fracciones f1, Fracciones f2)
@@ -100,7 +108,10 @@ public class Fracciones
         
         numerador = f1.GetNumerador() * f2.GetNumerador();
         denominador = f1.GetDenominador() * f2.GetDenominador();
-        return new Fracciones(numerador, denominador);
+        
+        Fracciones nuevaFr = new Fracciones(numerador, denominador);
+        nuevaFr.simpli();
+        return nuevaFr;
     }
     
     public static Fracciones division(Fracciones f1, Fracciones f2)
@@ -110,37 +121,23 @@ public class Fracciones
         numerador = f1.GetNumerador() * f2.GetDenominador();
         denominador = f1.GetDenominador() * f2.GetNumerador();
         int[] fr = f1.simpli(numerador, denominador);
-        return new Fracciones(fr[0], fr[1]);
+        
+        Fracciones nuevaFr = new Fracciones(fr[0], fr[1]);
+        nuevaFr.simpli();
+        return nuevaFr;
     }
  
     public void simpli()
     {
         //simplificacion...    
-        int a,b,mod;
-        
-        if(this.numerador%this.denominador == 0)
-        {
-            this.numerador = this.numerador/this.denominador;
-            this.denominador = 1;
-        }
-        if(this.numerador > this.denominador)
-        {
-            a = this.numerador;
-            b = this.denominador;
-        }
-        else
-        {
-            a = this.denominador;
-            b = this.numerador;
-        }
-        while(b != 0)
-        {
-            mod=a%b;
-            a=b;
-            b=mod;
-        }  
-        this.denominador = this.denominador/a;
-        this.numerador = this.numerador/a;
+        int[] sp = this.simpli(numerador, denominador);
+        this.numerador = sp[0];
+        this.denominador = sp[1];
+    }
+    
+    public void simpli(Fracciones fr)
+    {
+        this.simpli(fr.GetNumerador(), fr.GetDenominador());
     }
     
     public int[] simpli(int numerador, int denominador)
@@ -207,6 +204,7 @@ public class Fracciones
     
     public String toString() 
     {
+        this.simpli();
         return this.numerador+((this.denominador==1)?" ":"/"+this.denominador);
     }
 }
