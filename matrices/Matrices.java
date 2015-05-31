@@ -36,6 +36,36 @@ public final class Matrices
         this.message = "";
     }
     
+    public Matrices(Fracciones[][] mtz, int escalar, int expo)
+    {
+        this.tamRows = mtz.length;
+        this.tamCols = mtz[0].length;
+        
+        this.matriz_inicial = new Fracciones[tamRows][tamCols];
+        this.matriz_inicial = mtz;
+        this.matriz = new Fracciones[tamRows][tamCols];
+        this.matriz = mtz;
+        this.escalar = new Fracciones(escalar);
+        this.mat = "";
+        this.expo = new Fracciones(expo);
+        this.message = "";
+    }
+    
+    public Matrices(Fracciones[][] mtz, Fracciones escalar, Fracciones expo)
+    {
+        this.tamRows = mtz.length;
+        this.tamCols = mtz[0].length;
+        
+        this.matriz_inicial = new Fracciones[tamRows][tamCols];
+        this.matriz_inicial = mtz;
+        this.matriz = new Fracciones[tamRows][tamCols];
+        this.matriz = mtz;
+        this.escalar = new Fracciones(escalar);
+        this.mat = "";
+        this.expo = new Fracciones(expo);
+        this.message = "";
+    }
+    
     // Contrustor que recibe la matriz, el escalar y el exponente.
     public Matrices(String mat, String escalar, String expo)
     {
@@ -140,6 +170,20 @@ public final class Matrices
             System.out.println("error.");
     }
     
+    // Este metodo convierte un arreglo de enteros a un arreglo de Fracciones
+    public Fracciones[][] convertirFraccion(int[][] matriz)
+    {
+        Fracciones[][] nuevaMatriz = new Fracciones[tamCols][tamRows];
+        for(int rows=0; rows<matriz.length; rows++)
+        {
+            for(int cols=0; cols<matriz[rows].length; cols++)
+            {
+                nuevaMatriz[rows][cols] = new Fracciones(matriz[rows][cols]);
+            }
+        }
+        return nuevaMatriz;
+    }
+    
     // Realiza operaciones para obtener las matriz con escalar
     public void matrizEscalar()
     {
@@ -213,6 +257,45 @@ public final class Matrices
         return result;
     }
     
+    public void convertirTrasversal()
+    {
+        if(tamRows == tamCols)
+        {
+            for(int i=0; i<tamRows; i++)
+            {
+                for(int j=0; j<tamCols; i++)
+                {
+                    matriz[j][i] = matriz[i][j];
+                }
+            }
+        }
+        JOptionPane.showMessageDialog(null, "Error al sacar matriz traspuesta.\n Las columnas y filas deben ser del mismo tañano");
+    }
+    
+    public Fracciones[][] sacarTrasversal()
+    {
+        return this.sacarTrasversal(matriz);
+    }
+    
+        // Este metodo invierte filas y columnas recibiendo una matrz. Matriz Trasversal
+    public Fracciones[][] sacarTrasversal(Fracciones[][] mtz)
+    {
+        Fracciones[][] mtzAux = new Fracciones[mtz.length][mtz[0].length];
+        if(mtz.length ==  mtz[0].length)
+        {
+            for(int i=0; i< mtz[0].length; i++)
+            {
+                for(int j=0; j<mtz.length; i++)
+                {
+                    mtzAux[j][i] = mtz[i][j];
+                }
+            }
+            return mtzAux;
+        }
+        JOptionPane.showMessageDialog(null, "Error al sacar matriz traspuesta.\n Las columnas y filas deben ser del mismo tañano");
+        return null;
+    }
+    
     /*
     public void pedirValoresJOPane(String mat)
     {
@@ -249,6 +332,11 @@ public final class Matrices
             out += "\n";
         }
         return out+= "\n";
+    }
+    
+    public Fracciones[][] getMatriz()
+    {
+        return this.matriz;
     }
     
     public Fracciones getMatriz(int i, int j)
