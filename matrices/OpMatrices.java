@@ -1,4 +1,4 @@
-package matries;
+package matrices;
 
 /**
  *
