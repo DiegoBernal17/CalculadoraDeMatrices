@@ -54,52 +54,69 @@ public class Operaciones {
         // Comprueba si el número de columnas y filas son iguales
         if(matriz.length == matriz[0].length && matriz.length > 1)
         {
-            // Declaramos variables auxiliares
-            Fracciones[] fr = new Fracciones[matriz.length];
+            // Esto se hace porque la unica excepción para sacar una determiante es de 2x2
+            int valRepeat = matriz.length;
+            if(matriz.length == 2)
+                valRepeat = 1;
+            
+             // Declaramos variables auxiliares
+            Fracciones[] fr = new Fracciones[valRepeat];
             Fracciones aux = matriz[0][0]; 
             Fracciones sumar = new Fracciones(0);
             Fracciones restar = new Fracciones(0);
-            int count;
+            int count, count2=matriz.length;
+            boolean firstCnt=true;
             
             // Repetir 2 veces. Primera vez se suman, la otra restan
             for(int oneTwo=0; oneTwo<2; oneTwo++)
             {
-                for(int i=0; i<matriz.length; i++)
+                for(int i=0; i<valRepeat; i++)
                 {
-                    // Restamos 0 o 1 dependiendo que en vuelta va el ciclo
-                    count = i-oneTwo;
-                    System.out.println("*count: "+count); //<----
+                    // Ajustamos el contador dependiendo que en vuelta va el ciclo
+                    if(oneTwo==0)
+                        count = i;
+                    else if(firstCnt) {
+                        count=--count2;
+                        count2--;
+                        firstCnt=false;
+                    } else {
+                        count=--count2;
+                        if(count == -1)
+                            count = matriz.length-2;
+                    }
+                    
+                    System.out.println("*count: "+count); // <---- MOSTRAR EN CONSOLA
                     // Si es -1 se convierte a 2 ya que aqui el -1 no nos sirve
                     if(count == -1) count=matriz.length-1;
-                    System.out.println("count (2): "+count); //<----
+                    System.out.println("count (2): "+count); // <---- MOSTRAR EN CONSOLA
                     // Ciclo para hacer las multiplicaciones
                     for(int h=0; h<matriz[0].length; h++)
                     {
-                            System.out.println("    h: "+h); //<----
-                            // Primera vuelta
+                        System.out.println("    h: "+h); // <---- MOSTRAR EN CONSOLA
+                       // Primera vuelta
                         if(h==0) {
                             aux = matriz[h][count];
-                            System.out.println("    aux: "+aux); //<----
+                            System.out.println("    aux: "+aux); // <---- MOSTRAR EN CONSOLA
                         // Ultima vuelta
-                        }else if(h==matriz[0].length-1) {
+                        } else if(h==matriz[0].length-1) {
                             fr[i] = Fracciones.multiplicacion(aux, matriz[h][count]);
-                            System.out.println("    fr["+i+" ( i )]: "+fr[i]); //<----
+                            System.out.println("    fr["+i+" ( i )]: "+fr[i]); // <---- MOSTRAR EN CONSOLA
                         // Si no es primer ni ultima vuelta
-                        }else {
+                        } else  {
                             aux = Fracciones.multiplicacion(aux, matriz[h][count]);
-                            System.out.println("    aux (2): "+aux); //<----
+                            System.out.println("    aux (2): "+aux); // <---- MOSTRAR EN CONSOLA
                         }
                         
                         // Convierte a 0 o suma o resta la variable count dependiendo el caso
-                        if(count == matriz.length-1) {
+                        if(count == matriz.length-1 && oneTwo == 0) {
                             count = 0; 
-                            System.out.println("    count (2): "+count+"\n"); //<----
-                        }else if(oneTwo==0) {
+                            System.out.println("    count (3): "+count+"\n"); // <---- MOSTRAR EN CONSOLA
+                        } else if(oneTwo==0) {
                             count++;
-                            System.out.println("count++: "+count); //<----
+                            System.out.println("count++: "+count); // <---- MOSTRAR EN CONSOLA
                         } else {
                             count--;
-                            System.out.println("Count--: "+count); //<----
+                            System.out.println("Count--: "+count); // <---- MOSTRAR EN CONSOLA
                         }
                         
                         if(count < 0) {
@@ -109,10 +126,16 @@ public class Operaciones {
                 }
                 System.out.println("fr"+Arrays.toString(fr)); //<----
                 // Si es la primer vuelta sumara todo
-                if(oneTwo==0)
+                if(oneTwo==0 && valRepeat != 1) {
                     sumar = Fracciones.suma(fr);
+                // Condicional especial para matriz 2x2. Suma
+                } else if(oneTwo==0 && valRepeat == 1) {
+                    sumar = fr[0];
+                // Condicional especial para matriz 2x2. Resta
+                } else if(valRepeat == 1){
+                    restar =new Fracciones(-fr[0].GetNumerador(), fr[0].GetDenominador());
                 // Si es la segunda vuelta restara todo
-                else {
+                } else {
                     fr[0] = new Fracciones(-fr[0].GetNumerador(), fr[0].GetDenominador());
                     restar = Fracciones.resta(fr);
                 }
@@ -267,17 +290,20 @@ public class Operaciones {
     public Fracciones[][] sustituirColumna(int column)
     {
         // Se crea e inicializa un arreglo auxiliar
-        Fracciones[][] nuevaMatriz = new Fracciones[tamCols][tamRows];
+        Fracciones[][] nuevaMatriz = new Fracciones[tamRows][tamCols];
         
-        for(int cols=0; cols<tamCols; cols++)
+        for(int rows=0; rows<tamRows; rows++)
         {
-            for(int rows=0; rows<tamRows; rows++)
+            for(int cols=0; cols<tamCols; cols++)
             {
                 // Si la columna que se pide sustituir es igual a la actual en el ciclo.
-                if(cols == column)
-                    nuevaMatriz[cols][rows] = matriz_2[cols][rows];
-                else
-                    nuevaMatriz[cols][rows] = matriz[cols][rows];
+                if(cols == column) {
+                    nuevaMatriz[rows][cols] = matriz_2[rows][0];
+                    System.out.println("        &nuevaMatriz["+rows+"]["+cols+"]: "+nuevaMatriz[rows][cols]); // <---- MOSTRAR EN CONSOLA
+                } else {
+                    nuevaMatriz[rows][cols] = matriz[rows][cols];
+                    System.out.println("        nuevaMatriz["+rows+"]["+cols+"]: "+nuevaMatriz[rows][cols]); // <---- MOSTRAR EN CONSOLA
+                }
             }
         }
         return nuevaMatriz;
@@ -287,6 +313,8 @@ public class Operaciones {
     {
         // Caculamos la determinante total y la guardamos en una variable
         Fracciones dt = this.calcularDeterminante(this.matriz);
+        System.out.println("## dt: "+dt); // <---- MOSTRAR EN CONSOLA
+        
         // Declaramos varibles de determinante en X, determinante en Y y determiante en Z
         Fracciones dx, dy, dz;
         Fracciones[] xyz = new Fracciones[3];
@@ -295,22 +323,30 @@ public class Operaciones {
         
         // Ahora sustituimos la columna de resultados en la primer columna y calculamos el determinante
         mtzSustituida = this.sustituirColumna(0);
+        System.out.println("//(0): "+Arrays.deepToString(mtzSustituida)); // <---- MOSTRAR EN CONSOLA
         dx = this.calcularDeterminante(mtzSustituida);
+         System.out.println("## dx: "+dx); // <---- MOSTRAR EN CONSOLA
         // Sacamos X dividiendo Dx entre Dt
         xyz[0] = Fracciones.division(dx, dt);
         
         // Ahora sustituimos la columna de resultados en la segunda columna y calculamos el determinante
         mtzSustituida = this.sustituirColumna(1);
+        System.out.println("//(1): "+Arrays.deepToString(mtzSustituida)); // <---- MOSTRAR EN CONSOLA
         dy = this.calcularDeterminante(mtzSustituida);
+         System.out.println("## dy: "+dy); // <---- MOSTRAR EN CONSOLA
         // Sacamos Y dividiendo Dy entre Dt
         xyz[1] = Fracciones.division(dy, dt);
         
         // Por ultimo sustituimos columna de resultados en la tercer columna y calculamos el determinante
         mtzSustituida = this.sustituirColumna(2);
+        System.out.println("//(2): "+Arrays.deepToString(mtzSustituida)); // <---- MOSTRAR EN CONSOLA
         dz = this.calcularDeterminante(mtzSustituida);
+         System.out.println("## dz: "+dz); // <---- MOSTRAR EN CONSOLA
+         
         // Sacamos Z dividiendo Dz entre Dt
         xyz[2] = Fracciones.division(dz, dt);
         
+         System.out.println("X Y Z: "+Arrays.deepToString(xyz)); // <---- MOSTRAR EN CONSOLA
         // Retorna en un arreglo los valores de X, Y, Z.
         return xyz;
     }
@@ -338,6 +374,23 @@ public class Operaciones {
             JOptionPane.showMessageDialog(null, "Error. El determinante es 0 por lo tanto no se puede sacar la inversa");
         // Si retorna este valor 'null' es que hubo un error y anteriorente debio mostrar un mensaje de error.
         return null;
+    }
+    
+    public String toStringInvGJ()
+    {
+        Fracciones[][] invGJ = this.inversaGaussJordan();
+        String message = "";
+        for (Fracciones[] invGJ1 : invGJ)
+        {
+            for (int cols=3; cols<invGJ[0].length; cols++) {
+                if(cols != 3)
+                    message += " ";
+                message += invGJ1[cols];
+            }
+            message += "\n";
+        }
+        
+        return message;
     }
     
     // Este metodo solo es llamado para mostrar la comprobacion de la inversa por GJ.    A * A^2 = |
@@ -401,6 +454,22 @@ public class Operaciones {
         // Mutiplicar la matriz_2 por el determinante
         Matrices matrizFinal = new Matrices(matriz_2, dtA, new Fracciones(1));
         return matrizFinal.getMatriz();
+    }
+    
+     public String toStringInvCofactores()
+    {
+        Fracciones[][] invCofs = this.inversaCofactores();
+        String message = "";
+        for (Fracciones[] inversa : invCofs)
+        {
+            for (int cols=0; cols<invCofs[0].length; cols++) {
+                if(cols != 0)
+                    message += " ";
+                message += inversa[cols];
+            }
+            message += "\n";
+        }
+        return message;
     }
     
     // Lo que hace este metodo es crear una matriz Fracciones auxiliar par asi convertir todo en 0 y 1
