@@ -34,6 +34,7 @@ public final class Matrices
         this.mat = "";
         this.expo = new Fracciones(1);
         this.message = "";
+        this.obtenerMatriz();
     }
     
     public Matrices(Fracciones[][] mtz, int escalar, int expo)
@@ -49,6 +50,7 @@ public final class Matrices
         this.mat = "";
         this.expo = new Fracciones(expo);
         this.message = "";
+        this.obtenerMatriz();
     }
     
     public Matrices(Fracciones[][] mtz, Fracciones escalar, Fracciones expo)
@@ -60,10 +62,11 @@ public final class Matrices
         this.matriz_inicial = mtz;
         this.matriz = new Fracciones[tamRows][tamCols];
         this.matriz = mtz;
-        this.escalar = new Fracciones(escalar);
+        this.escalar = escalar;
         this.mat = "";
-        this.expo = new Fracciones(expo);
+        this.expo = expo;
         this.message = "";
+        this.obtenerMatriz();
     }
     
     // Contrustor que recibe la matriz, el escalar y el exponente.
@@ -138,15 +141,21 @@ public final class Matrices
             {
                 try
                 {
-                    this.matriz_inicial[i][j] = new Fracciones(mtz[cont]);
-                    cont++;
-                } 
-                catch(NumberFormatException e) 
-                {
-                    JOptionPane.showMessageDialog(null, "No puedes dejar la matrice A o B vacia", "Matriz vacía", JOptionPane.ERROR_MESSAGE);
+                	if(!mtz[cont].equals("")) {
+	                    this.matriz_inicial[i][j] = new Fracciones(mtz[cont]);
+	                    cont++;
+                	} else {
+                		throw new Exception("Dato Nulo.");
+                	}
+                } catch(NumberFormatException e) {
+                    JOptionPane.showMessageDialog(null, "Ingresa solamente numeros.", "No números", JOptionPane.ERROR_MESSAGE);
                     System.out.println("Error: "+e);
                     break;
-                }
+                } catch(Exception e) {
+                	JOptionPane.showMessageDialog(null, "No puedes dejar la matriz A ni B vacia", "Matrices sola", JOptionPane.ERROR_MESSAGE);
+                    System.out.println("Error: "+e);
+                    break;
+            	}
             }
         }
     }
@@ -155,19 +164,17 @@ public final class Matrices
     public void obtenerMatriz()
     {
         this.matriz = this.matriz_inicial.clone();
-        if(escalar.GetNumerador() == 1 && expo.GetNumerador() == 1)
+        if((escalar.GetNumerador() == 1 && escalar.GetDenominador() == 1) && (expo.GetNumerador() == 1 && expo.GetDenominador() == 1))
             this.matriz = matriz_inicial;
-        else if(escalar.GetNumerador() > 1 || expo.GetNumerador() > 1)
+        else
         {
-            if(escalar.GetNumerador() > 1 && expo.GetNumerador() == 1)
+            if(expo.GetNumerador() == 1 && expo.GetDenominador() == 1)
                 matrizEscalar();
-            else if(escalar.GetNumerador() == 1 && expo.GetNumerador() > 1)
+            else if(escalar.GetNumerador() == 1 && escalar.GetDenominador() == 1)
                 matrizExponencial();
             else
                 matrizEscaExpo();
         }
-        else
-            System.out.println("error.");
     }
     
     // Este metodo convierte un arreglo de enteros a un arreglo de Fracciones
@@ -257,7 +264,7 @@ public final class Matrices
         return result;
     }
     
-    public void convertirTrasversal()
+    public void convertirTraspuesta()
     {
         if(tamRows == tamCols)
         {
@@ -272,20 +279,20 @@ public final class Matrices
         JOptionPane.showMessageDialog(null, "Error al sacar matriz traspuesta.\n Las columnas y filas deben ser del mismo tañano");
     }
     
-    public Fracciones[][] sacarTrasversal()
+    public Fracciones[][] sacarTraspuesta()
     {
-        return this.sacarTrasversal(matriz);
+        return this.sacarTraspuesta(matriz);
     }
     
         // Este metodo invierte filas y columnas recibiendo una matrz. Matriz Trasversal
-    public Fracciones[][] sacarTrasversal(Fracciones[][] mtz)
+    public Fracciones[][] sacarTraspuesta(Fracciones[][] mtz)
     {
         Fracciones[][] mtzAux = new Fracciones[mtz.length][mtz[0].length];
         if(mtz.length ==  mtz[0].length)
         {
-            for(int i=0; i< mtz[0].length; i++)
+            for(int i=0; i< mtz.length; i++)
             {
-                for(int j=0; j<mtz.length; i++)
+                for(int j=0; j<mtz[0].length; j++)
                 {
                     mtzAux[j][i] = mtz[i][j];
                 }
@@ -332,6 +339,22 @@ public final class Matrices
             out += "\n";
         }
         return out+= "\n";
+    }
+    
+    public String getTraspuesta()
+    {
+    	Fracciones[][] tras = this.sacarTraspuesta();
+    	
+        String message = "";
+        for (Fracciones[] trasp1 : tras)
+        {
+            for (int cols=0; cols<tras[0].length; cols++) {
+                message += trasp1[cols]+" ";
+            }
+            message += "\n";
+        }
+        
+        return message;
     }
     
     public Fracciones[][] getMatriz()

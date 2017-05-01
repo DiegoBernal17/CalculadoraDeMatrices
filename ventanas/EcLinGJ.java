@@ -2,6 +2,7 @@ package ventanas;
 
 import javax.swing.JOptionPane;
 
+import fraccion.Fracciones;
 import matrices.Matrices;
 import matrices.Operaciones;
 
@@ -9,13 +10,15 @@ import matrices.Operaciones;
  *
  * @author Bernal
  */
-public class InvGJ extends javax.swing.JDialog {
+public class EcLinGJ extends javax.swing.JDialog {
+
     private Matrices mtz;
+    private Matrices mtz_2;
     private Operaciones ops;
     /**
-     * Creates new form InvGJ
+     * Creates new form EcLinGJ
      */
-    public InvGJ(java.awt.Frame parent, boolean modal) {
+    public EcLinGJ(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
     }
@@ -33,27 +36,31 @@ public class InvGJ extends javax.swing.JDialog {
         separator = new javax.swing.JSeparator();
         btn_operations = new javax.swing.JButton();
         btn_close = new javax.swing.JButton();
+        lbl_x = new javax.swing.JLabel();
+        field_x = new javax.swing.JTextField();
+        lbl_y = new javax.swing.JLabel();
+        field_y = new javax.swing.JTextField();
+        lbl_z = new javax.swing.JLabel();
+        field_z = new javax.swing.JTextField();
         btn_ready = new javax.swing.JButton();
         lbl_matriz = new javax.swing.JLabel();
         btn_saveMatriz = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        txt_matrizA = new javax.swing.JTextArea();
+        txt_matriz2 = new javax.swing.JTextArea();
         jScrollPane2 = new javax.swing.JScrollPane();
-        txt_inversa = new javax.swing.JTextArea();
-        lbl_inversa = new javax.swing.JLabel();
+        txt_matriz1 = new javax.swing.JTextArea();
+        lbl_resultados = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
         lbl_title.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        lbl_title.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lbl_title.setText("Inversa por Gauss-Jordan");
+        lbl_title.setText("Despejar incognita por Gauss-Jordan");
 
         btn_operations.setText("Ver Operaciones");
-        btn_operations.addActionListener(new java.awt.event.ActionListener(){
-        	public void actionPerformed(java.awt.event.ActionEvent evt) {
-        		btn_operationsActionPerformed(evt);
-        	}
+        btn_operations.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_operationsActionPerformed(evt);
+            }
         });
 
         btn_close.setText("Cerrar");
@@ -62,15 +69,21 @@ public class InvGJ extends javax.swing.JDialog {
                 btn_closeActionPerformed(evt);
             }
         });
+        
+        lbl_x.setText("X:");
 
-        btn_ready.setText("Sacar inversa");
+        lbl_y.setText("Y:");
+
+        lbl_z.setText("Z:");
+
+        btn_ready.setText("Depejar");
         btn_ready.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_readyActionPerformed(evt);
             }
         });
 
-        lbl_matriz.setText("Matriz");
+        lbl_matriz.setText("Matriz:");
 
         btn_saveMatriz.setText("Guardar matriz como imagen");
 
@@ -78,54 +91,73 @@ public class InvGJ extends javax.swing.JDialog {
         jScrollPane1.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
         jScrollPane1.setPreferredSize(new java.awt.Dimension(130, 86));
 
-        txt_matrizA.setColumns(20);
-        txt_matrizA.setRows(5);
-        txt_matrizA.setMinimumSize(new java.awt.Dimension(2, 10));
-        jScrollPane1.setViewportView(txt_matrizA);
+        txt_matriz2.setColumns(20);
+        txt_matriz2.setRows(5);
+        txt_matriz2.setMinimumSize(new java.awt.Dimension(2, 10));
+        jScrollPane1.setViewportView(txt_matriz2);
 
         jScrollPane2.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         jScrollPane2.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
         jScrollPane2.setPreferredSize(new java.awt.Dimension(130, 86));
 
-        txt_inversa.setColumns(20);
-        txt_inversa.setRows(5);
-        txt_inversa.setMinimumSize(new java.awt.Dimension(2, 10));
-        jScrollPane2.setViewportView(txt_inversa);
+        txt_matriz1.setColumns(20);
+        txt_matriz1.setRows(5);
+        txt_matriz1.setMinimumSize(new java.awt.Dimension(2, 10));
+        jScrollPane2.setViewportView(txt_matriz1);
 
-        lbl_inversa.setText("Matriz Inversa");
+        lbl_resultados.setText("Resultados:");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(lbl_title, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
+                .addComponent(lbl_title)
+                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(separator)
+            .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(separator)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(layout.createSequentialGroup()
                                 .addComponent(btn_operations)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(btn_ready))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                                 .addComponent(btn_saveMatriz)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(btn_close)))
-                        .addContainerGap())))
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(btn_close))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(36, 36, 36)
+                        .addComponent(lbl_x)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(field_x, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(lbl_y)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(field_y, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(16, 16, 16)
+                                .addComponent(lbl_z)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(field_z, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(lbl_resultados))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(18, 18, 18)
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
             .addGroup(layout.createSequentialGroup()
-                .addGap(55, 55, 55)
+                .addGap(90, 90, 90)
                 .addComponent(lbl_matriz)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(lbl_inversa)
-                .addGap(33, 33, 33))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -133,15 +165,23 @@ public class InvGJ extends javax.swing.JDialog {
                 .addComponent(lbl_title)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(separator, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(2, 2, 2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lbl_matriz)
-                    .addComponent(lbl_inversa))
+                    .addComponent(lbl_resultados))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lbl_x)
+                    .addComponent(field_x, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lbl_y)
+                    .addComponent(field_y, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lbl_z)
+                    .addComponent(field_z, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btn_ready)
                     .addComponent(btn_operations))
@@ -154,20 +194,25 @@ public class InvGJ extends javax.swing.JDialog {
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
-
+    
     private void btn_closeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_closeActionPerformed
-       this.dispose();
+    	this.dispose();
     }//GEN-LAST:event_btn_closeActionPerformed
 
     private void btn_readyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_readyActionPerformed
     	
-    	String matrizA = txt_matrizA.getText();
+    	String matrizA = txt_matriz1.getText();
+    	String matrizB = txt_matriz2.getText();
     	
         try
         {
-        	mtz = new Matrices(matrizA, "1","1");
-			ops = new Operaciones(mtz);
-			txt_inversa.setText(ops.toStringInvGJ());
+        	mtz = new Matrices(matrizA, "1", "1");
+		    mtz_2 = new Matrices(matrizB, "1", "1");
+		    ops = new Operaciones(mtz, mtz_2);
+		    Fracciones[] xyz = ops.toFraccionesGaussJordan();
+		    field_x.setText(xyz[0].toString());
+		    field_y.setText(xyz[1].toString());
+		    field_z.setText(xyz[2].toString());
         } catch(Exception e) {
      	   System.out.println("TERMINADO."); // <---- MOSTRAR EN CONSOLA.
         }
@@ -189,7 +234,7 @@ public class InvGJ extends javax.swing.JDialog {
         }
         
     }//GEN-LAST:event_btn_operationsActionPerformed
-    
+
     /**
      * @param args the command line arguments
      */
@@ -207,20 +252,20 @@ public class InvGJ extends javax.swing.JDialog {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(InvGJ.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(EcLinGJ.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(InvGJ.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(EcLinGJ.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(InvGJ.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(EcLinGJ.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(InvGJ.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(EcLinGJ.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                InvGJ dialog = new InvGJ(new javax.swing.JFrame(), true);
+                EcLinGJ dialog = new EcLinGJ(new javax.swing.JFrame(), true);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {
@@ -237,13 +282,19 @@ public class InvGJ extends javax.swing.JDialog {
     private javax.swing.JButton btn_operations;
     private javax.swing.JButton btn_ready;
     private javax.swing.JButton btn_saveMatriz;
+    private javax.swing.JTextField field_x;
+    private javax.swing.JTextField field_y;
+    private javax.swing.JTextField field_z;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JLabel lbl_inversa;
     private javax.swing.JLabel lbl_matriz;
+    private javax.swing.JLabel lbl_resultados;
     private javax.swing.JLabel lbl_title;
+    private javax.swing.JLabel lbl_x;
+    private javax.swing.JLabel lbl_y;
+    private javax.swing.JLabel lbl_z;
     private javax.swing.JSeparator separator;
-    private javax.swing.JTextArea txt_inversa;
-    private javax.swing.JTextArea txt_matrizA;
+    private javax.swing.JTextArea txt_matriz1;
+    private javax.swing.JTextArea txt_matriz2;
     // End of variables declaration//GEN-END:variables
 }

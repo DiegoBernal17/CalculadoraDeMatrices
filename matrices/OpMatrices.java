@@ -43,7 +43,7 @@ public class OpMatrices
                 return true;
             }
             else
-                JOptionPane.showMessageDialog(null, "Las matrices no son del mismo tamaño para poder sumarlas", "Error al sumar", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Las matrices no son del mismo tamaño para poder sumarlas o restarlas", "Error al sumar o restar", JOptionPane.ERROR_MESSAGE);
         }
         else if(op == '*')
         {

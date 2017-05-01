@@ -1,3 +1,8 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package fraccion;
 
 /**
@@ -187,6 +192,11 @@ public class Fracciones
             }
         }
         return nuevaMatriz;
+    }
+    
+    public Fracciones Abs()
+    {
+    	return new Fracciones(Math.abs(numerador)/Math.abs(denominador));
     }
  
     public void printf()
