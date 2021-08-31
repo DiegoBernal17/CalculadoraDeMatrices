@@ -20,6 +20,7 @@ public class Traspuesta extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
     }
+    //raton
 
     /**
      * This method is called from within the constructor to initialize the form.
